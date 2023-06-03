@@ -57,6 +57,12 @@
       }
     });
 
+    $(".gallery").on("click", ".nav-link", function() {
+      $(".nav-link").removeClass("active");
+      $(this).addClass("active");
+      $.fn.mauGallery.methods.filterByTag();
+    });
+
     $(".gallery").on("click", ".nav-link", $.fn.mauGallery.methods.filterByTag);
     $(".gallery").on("click", ".mg-prev", () =>
       $.fn.mauGallery.methods.prevImage(options.lightboxId)
