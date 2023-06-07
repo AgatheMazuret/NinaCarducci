@@ -1,13 +1,14 @@
 body {
 	max-width: 1920px;
 	margin: auto;
+	background-color: antiquewhite;
 }
 * {
 	font-family: 'Inter';
 	font-style: normal;
 }
 .top-header {
-	background-color: white;
+	background-color: antiquewhite;
 	position: sticky;
 	top:0;
 	z-index: 1000;
@@ -84,6 +85,7 @@ body {
 	font-family: 'Spectral';
 	font-weight: 800;
 	font-style: italic;
+	font-size: 18px;
 	width: 60%;
 }
 #about-me p {
