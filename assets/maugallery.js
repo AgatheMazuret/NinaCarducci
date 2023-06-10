@@ -3,7 +3,10 @@
     var options = $.extend({}, $.fn.mauGallery.defaults, options);
     var tagsCollection = [];
     return this.each(function() {
+      // Créer un conteneur pour les lignes de la galerie
       $.fn.mauGallery.methods.createRowWrapper($(this));
+
+       // Créer une lightbox si l'option est activée
       if (options.lightBox) {
         $.fn.mauGallery.methods.createLightBox(
           $(this),
@@ -11,14 +14,24 @@
           options.navigation
         );
       }
+
+      // Attacher les écouteurs d'événements
       $.fn.mauGallery.listeners(options);
 
+      // Parcourir chaque élément children de la galerie
       $(this)
         .children(".gallery-item")
         .each(function(index) {
+          // Appliquer des modifications aux éléments d'image pour qu'ils s'adaptent de manière responsive
           $.fn.mauGallery.methods.responsiveImageItem($(this));
+          
+          // Déplacer l'élément dans le conteneur de ligne
           $.fn.mauGallery.methods.moveItemInRowWrapper($(this));
+          
+          // Envelopper l'élément dans une colonne en fonction du nombre de colonnes spécifié
           $.fn.mauGallery.methods.wrapItemInColumn($(this), options.columns);
+          
+          // Collecter les balises uniques si l'option showTags est activée
           var theTag = $(this).data("gallery-tag");
           if (
             options.showTags &&
@@ -29,6 +42,7 @@
           }
         });
 
+        // Afficher les balises si l'option showTags est activée
       if (options.showTags) {
         $.fn.mauGallery.methods.showItemTags(
           $(this),
@@ -37,9 +51,12 @@
         );
       }
 
+      // Afficher la galerie avec un effet de fondu
       $(this).fadeIn(500);
     });
   };
+
+  // Options par défaut
   $.fn.mauGallery.defaults = {
     columns: 3,
     lightBox: true,
@@ -48,7 +65,10 @@
     tagsPosition: "bottom",
     navigation: true
   };
+
+  // Écouteurs d'événements
   $.fn.mauGallery.listeners = function(options) {
+    // Écouteur de clic sur les éléments de la galerie
     $(".gallery-item").on("click", function() {
       if (options.lightBox && $(this).prop("tagName") === "IMG") {
         $.fn.mauGallery.methods.openLightBox($(this), options.lightboxId);
@@ -57,21 +77,31 @@
       }
     });
 
+    // Écouteur de clic sur les liens de navigation des balises
     $(".gallery").on("click", ".nav-link", function() {
       $(".nav-link").removeClass("active");
       $(this).addClass("active");
       $.fn.mauGallery.methods.filterByTag();
     });
 
+    // Écouteur de clic sur les liens de navigation des balises (appel direct à filterByTag)
     $(".gallery").on("click", ".nav-link", $.fn.mauGallery.methods.filterByTag);
+    
+    // Écouteur de clic sur le bouton précédent de la lightbox
     $(".gallery").on("click", ".mg-prev", function () {
         $.fn.mauGallery.methods.prevImage(options.lightboxId);
       });
+
+      // Écouteur de clic sur le bouton suivant de la lightbox
     $(".gallery").on("click", ".mg-next", function() {
       $.fn.mauGallery.methods.nextImage(options.lightboxId)
     });
   };
+
+  // Méthodes utilitaires
   $.fn.mauGallery.methods = {
+  
+    // Créer un conteneur de ligne pour les éléments de la galerie
     createRowWrapper(element) {
       if (
         !element
@@ -82,6 +112,8 @@
         element.append('<div class="gallery-items-row row"></div>');
       }
     },
+
+    // Envelopper un élément dans une colonne en fonction du nombre de colonnes spécifié
     wrapItemInColumn(element, columns) {
       if (columns.constructor === Number) {
         element.wrap(
@@ -111,20 +143,28 @@
         );
       }
     },
+
+    // Déplacer un élément dans le conteneur de ligne
     moveItemInRowWrapper(element) {
       element.appendTo(".gallery-items-row");
     },
+
+    // Appliquer des modifications aux éléments d'image pour qu'ils s'adaptent de manière responsive
     responsiveImageItem(element) {
       if (element.prop("tagName") === "IMG") {
         element.addClass("img-fluid");
       }
     },
+
+    // Ouvrir la lightbox avec l'image cliquée
     openLightBox(element, lightboxId) {
       $(`#${lightboxId}`)
         .find(".lightboxImage")
         .attr("src", element.attr("src"));
       $(`#${lightboxId}`).modal("toggle");
     },
+
+    // Afficher l'image précédente dans la lightbox
     prevImage() {
       let activeImage = null;
       $("img.gallery-item").each(function() {
@@ -156,7 +196,7 @@
 
       $(imagesCollection).each(function(i) {
         if ($(activeImage).attr("src") === $(this).attr("src")) {
-          // Rajouter -1 
+        // Décrémenter l'index pour afficher l'image précédente 
           index = i -1;
         }
       });
@@ -165,6 +205,8 @@
         imagesCollection[imagesCollection.length - 1];
       $(".lightboxImage").attr("src", $(next).attr("src"));
     },
+
+    // Afficher l'image suivante dans la lightbox
     nextImage() {
       let activeImage = null;
       $("img.gallery-item").each(function() {
@@ -196,13 +238,15 @@
 
       $(imagesCollection).each(function(i) {
         if ($(activeImage).attr("src") === $(this).attr("src")) {
-          // rajouter +1
+          // Incrémenter l'index pour afficher l'image suivante
           index = i +1;
         }
       });
       next = imagesCollection[index] || imagesCollection[0];
       $(".lightboxImage").attr("src", $(next).attr("src"));
     },
+
+    // Créer la lightbox 
     createLightBox(gallery, lightboxId, navigation) {
       gallery.append(`<div class="modal fade" id="${
         lightboxId ? lightboxId : "galleryLightbox"
@@ -226,6 +270,8 @@
                 </div>
             </div>`);
     },
+
+    // Afficher les tags des éléments de la galerie
     showItemTags(gallery, position, tags) {
       var tagItems =
         '<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>';
@@ -243,6 +289,8 @@
         console.error(`Unknown tags position: ${position}`);
       }
     },
+
+    // Filtrer les éléments de la galerie par tag
     filterByTag() {
       if ($(this).hasClass("active-tag")) {
         return;
