@@ -72,7 +72,7 @@ body {
 }
 
 .picture img {
-	width: 380px;
+	width: 100%;
 
 }
 
@@ -86,11 +86,11 @@ body {
 	font-size: 30px;
 }
 
-.about-me__introduction {
+.about-me__introduction, .infoCom {
 	font-family: 'Spectral';
 	font-weight: 800;
 	font-style: italic;
-	font-size: 18px;
+	font-size: 17px;
 	width: 60%;
 }
 
@@ -134,8 +134,8 @@ body {
 
 .gallery-item {
 	position: absolute;
-	width: 380px;
-	height: 380px;
+	width: 100%;
+	height: 100%;
 	object-fit: cover;
 	padding: .5em;
 }
